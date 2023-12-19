@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>create User</title>
+
+
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        .heading{
+            text-align: center;
+        }
+
+        .form{
+            max-width: 600px;
+            padding: 2rem;
+            margin: 0 auto;
+        }
+        .form fieldset input{
+            width:100%;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+        <main>
+
+            <h2 class="heading">create Admin User </h2>
+
+
+            <form class="form"  method="POST" action="/admin/create"  target="_self">
+                <fieldset style="width: 100%">
+                  <legend style="text-align: center;">Create New Admin </legend>
+                  <label for="name">Name:</label><br>
+                  <input type="text" id="name" name="name" placeholder="name" required minlength="4"><br><br>
+                  
+                  <label for="email">Email:</label><br>
+                  <input type="email" id="email" name="email" placeholder="youremail@gmail.com" required minlength="4"><br><br>
+                  <label for="password">Last name:</label><br>
+                  <input type="password" id="password" name="password" placeholder="password" required minlength="4"><br>
+                  <br><br>
+                  <input type="submit" value="Submit">
+                </fieldset>
+                </form>
+        </main>
+
+
+        <script>
+           
+            
+        </script>
+</body>
+</html>
