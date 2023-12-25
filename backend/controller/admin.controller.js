@@ -2,6 +2,7 @@ const path = require("path")
 const bcrypt = require('bcrypt');
 const  jwt = require('jsonwebtoken');
 const { adminCollection } = require("../model/mongoDB");
+const { ObjectId } = require("mongodb");
 const saltRounds = 10;
 
 
@@ -64,12 +65,25 @@ const adminLogin = async (req,res) =>{
     
 }
 
-
+const checkAdmin =async (req,res) =>{
+    console.log(req.headers.id)
+    const id = req.headers.id
+    const query = {_id: new ObjectId(id)}
+    const result = await adminCollection.findOne(query)
+    
+    if(result !== null){
+        return res.status(200).json({result:true,isAdmin:true})
+        
+    }
+    return res.status(403).json({result:false,massage:"unauthorized user",isAdmin:true})
+    
+}
 
 
 
 module.exports = {
     createAdmin,
     AdminPage,
-    adminLogin
+    adminLogin,
+    checkAdmin
 }

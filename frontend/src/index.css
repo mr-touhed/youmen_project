@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+*{
+  font-family: 'Poppins', sans-serif;
+}
+
+.layout{
+    @apply mx-[6%]
+  }
+  
+  .content-container{
+    @apply max-w-[1200px] mx-auto
+  }
+  .box{
+    @apply border-2 rounded-md w-40 h-20 bg-slate-900 text-white flex justify-center items-center shadow-md cursor-pointer
+  }
+  small{
+    color: #0E7490;
+  }
+  small::after{
+    content: "*";
+    color:red
+  }
+  
+  #upload-file-container input {
+    filter: alpha(opacity=0);
+    opacity: 0;   
+  }
+  
+  .card_section {
+    @apply bg-[url(./assets/bg.png)] bg-[#000000e0]  bg-top md:bg-cover bg-contain bg-no-repeat relative after:content-[""] after:absolute after:bottom-0  after:w-full after:h-[50%] after:bg-gradient-to-t from-[#ffffff] from-[45%] to-[rgba(255,255,255,0)]
+  }
+  .profile {
+    @apply bg-[url(./assets/footer_bg.png)] bg-[90%_100%] md:bg-[90%_150%] bg-no-repeat bg-contain;
+  }
+
+  button[disabled]{
+    @apply text-white bg-gray-300 rounded focus:outline-none
+  }
+
+
+  .sms-section{
+    transform: translateY(1000px);
+    transition: transform 0.5s ease;
+   
+  }
+ .active-sms{
+    transform: translateY(0);
+    transition: transform 0.5s ease;
+  }
