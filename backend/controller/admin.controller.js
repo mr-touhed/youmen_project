@@ -15,14 +15,15 @@ const AdminPage = (req,res) =>{
 }
 
 // api for get new admin user data and store 
-const createAdmin = (req,res) =>{
+const createAdmin = async (req,res) =>{
         const {name,email,password} = req.body
         
         
-        bcrypt.hash(password, saltRounds, function(err, hash) {
+        bcrypt.hash(password, saltRounds, async function(err, hash) {
             // Store hash in your password DB.
             const  newAdmin = {...req.body,password:hash}
-
+                const result = await adminCollection.insertOne(newAdmin)
+                console.log(result)
             res.send("<h1 style='text-align:center'>Add new Admin successfully</h1>")
            
         });
