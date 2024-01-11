@@ -11,7 +11,7 @@ const addUser = async (req,res) =>{
         const {userPath,name,position,organization,email,img,tel,work_tel,LinkedIn_url,status} = (req.body)
       
       
-      const newUser = {userPath,name,position,organization,email,img,tel,work_tel,LinkedIn_url,status,date: new Date()}
+      const newUser = {userPath:userPath.toLowerCase(),name,position,organization,email,img,tel,work_tel,LinkedIn_url,status,date: new Date()}
      
       const existUser =await  userCollection.findOne({userPath:userPath})
      
@@ -30,8 +30,9 @@ const addUser = async (req,res) =>{
 
 const singelUser = async(req,res) =>{
     const {path} = req.query;
-  
-    const query = {userPath:path}
+    const urlPath = path.toLowerCase()
+   
+    const query = { userPath: { $regex: urlPath, $options: "i" } };
     const user = await userCollection.findOne(query)
    
     if(user === null){
@@ -53,7 +54,8 @@ const AllUsers = async(req,res) =>{
 }
 
 const update_user =async (req,res) =>{
-    const {userPath,name,position,organization,email,tel,work_tel,LinkedIn_url,status,_id}=(req.body)
+    try {
+        const {userPath,name,position,organization,email,tel,work_tel,LinkedIn_url,status,_id}=(req.body)
     const filter = {_id: new ObjectId(_id)}
     const updateDocument = {
         $set: {
@@ -69,15 +71,27 @@ const update_user =async (req,res) =>{
        return res.status(200).json({result:true,massage:"update user successfully"})
         
      }
+    } catch (error) {
+        res.status(404).json({result:false,massage:"not  modified any data"})
+    }
 
-     res.status(404).json({result:false,massage:"not  modified any data"})
+     
 
 }
 
-const update_status = (req,res) =>{
-    res.send("update status")
+const deleteUser = async (req,res) =>{
+    try {
+        
+        const {id} = req.query;
+        const query = {_id:new ObjectId(id)}
+        const result = await userCollection.deleteOne(query)
+        return res.status(200).json({result:true,massage:"user delete successfully"})
+    } catch (error) {
+        res.status(404).json({result:false,massage:"some thing went wrong", error})
+    }
+    
 }
 
 module.exports = {
-    addUser,singelUser,update_user,update_status,AllUsers
+    addUser,singelUser,update_user,deleteUser,AllUsers
 }
