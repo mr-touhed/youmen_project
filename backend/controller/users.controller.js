@@ -104,9 +104,10 @@ const getVcard = async (req,res) =>{
     vCard.workPhone = work_tel;
     vCard.email = email;
     vCard.organization = organization;
-    vCard.role = position;
-    vCard.logo.attachFromUrl(img, 'JPEG');
+    vCard.title = position;
+    vCard.photo.embedFromFile(img)
     vCard.socialUrls['linkedIn'] = LinkedIn_url;
+    vCard.url = LinkedIn_url;
 
 
     // Set response headers for downloading the file
