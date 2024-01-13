@@ -114,9 +114,9 @@ const getVcard = async (req,res) =>{
   res.setHeader('Content-Type', 'text/vcard');
   res.setHeader('Content-Disposition', `attachment; filename=${name}_contact.vcf`);
           // Send the vCard as a response
-        res.send(vCard.getFormattedString());
+        res.send({vcard:vCard.getFormattedString()});
     } catch (error) {
-        
+        res.status(404).json({result:false,massage:"some thing went wrong", error})
     }
 }
 
