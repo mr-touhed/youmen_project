@@ -4,14 +4,16 @@ import { FaPhone } from "react-icons/fa6";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { MdArrowForwardIos } from "react-icons/md";
 import { IoArrowRedoSharp } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SmsSender from "../../components/SmsSender";
 import { apiUrl } from "../../utilities/url";
 
 
 const Profile = ({ user }) => {
-  const [sendSms, setSendSms] = useState(false);
+
   
+  const [sendSms, setSendSms] = useState(false);
+  const btnref = useRef(null)
   const {
     _id,
     userPath,
@@ -28,17 +30,49 @@ const Profile = ({ user }) => {
   } = user;
   const [activeProfile,setActiveProfile] = useState(false)
 
-  const downloadVcard = (id) =>{
+  const downloadVcard = async() =>{
+
+    fetch(`${apiUrl}/vcard?id=${_id}`)
+    .then( res=> res.json())
+    .then(data => {
       
-      try {
-        // Trigger the download by opening a new window or making a request
-        window.open(`${apiUrl}/vcard?id=${id}`);
-      } catch (error) {
-        console.error('Error downloading vCard:', error);
+      
+      const vcard =data.vcard
+
+
+      if (vcard){
+          
+        // Create a Blob with the vCard data
+        const blob =new Blob([vcard], { type: 'text/vcard' });
+             // Create a download link
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = `${name}_contact.vcf`;
+
+    // Trigger a click on the link to initiate the download
+    link.click();
+
+    // Cleanup: remove the link and revoke the Blob URL
+    window.URL.revokeObjectURL(link.href);
+
       }
+      
+    })
+        
+
+
+      
+
+      
+
   }
   const pageTitle = name || "partner"
   useEffect(()=>{
+
+    
+
+
+
     document.title = `youman | ${pageTitle}`
 
     setTimeout(() => {
@@ -69,7 +103,7 @@ const Profile = ({ user }) => {
         </div>
       </div>
 
-      <section className="md:max-h-[440px] max-h-[385px]">
+      <section className="md:max-h-[440px]  max-h-[385px]">
         <div
           className={`grid grid-cols-1 justify-items-center   space-y-4  ${
             sendSms && "hidden transition-all duration-75"
@@ -81,10 +115,11 @@ const Profile = ({ user }) => {
           <h3 className="md:text-3xl text-lg font-bold "> {position}</h3>
           <div className="grid grid-cols-2 gap-2 my-4">
           <button
+            ref={btnref}
               className="bg-black font-serif text-sm uppercase text-white md:px-10 px-6 py-2 md:py-3 rounded-3xl border-white border-4 shadow-lg"
-              onClick={() => downloadVcard(_id)}
+              onClick={downloadVcard}
             >
-              contact
+              save contact
             </button>
 
             <button
@@ -95,14 +130,14 @@ const Profile = ({ user }) => {
             </button>
           </div>
 
-          <ul className="space-y-6 py-6  md:w-[600px] w-full px-6 text-1xl">
+          <ul className="space-y-6 py-6  md:w-[600px] w-full px-6 text-[1.3rem]">
             <li className="shadow-sm flex justify-between items-center ">
               <MdOutlineAlternateEmail /> {email} <MdArrowForwardIos />
             </li>
-            <li className=" shadow-sm flex justify-between items-center ">
+            <li className=" shadow-sm flex justify-between items-center relative">
               <FaPhone />
-              <span>
-                {work_tel} <span className="text-sm">(work)</span>
+              <span className="after:content-['(work)'] after:absolute after:top-2 after:right-8 after:text-[12px]">
+                {work_tel}
               </span>{" "}
               <MdArrowForwardIos />
             </li>
@@ -111,8 +146,8 @@ const Profile = ({ user }) => {
               {tel} <MdArrowForwardIos />
             </li>
             <li onClick={openLinkedInPage} className="shadow-sm flex justify-between items-center cursor-pointer  p-2 ">
-              <FaLinkedinIn /> <span className="text-[12px]">{LinkedIn_url}</span>{" "}
-              <IoArrowRedoSharp />
+              <FaLinkedinIn className="text-[#0A66C2]"/> <span className="text-[12px] text-[#0A66C2] font-semibold">{LinkedIn_url}</span>{" "}
+              <IoArrowRedoSharp className="text-[#0A66C2]" />
             </li>
           </ul>
 
