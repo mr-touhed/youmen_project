@@ -1,5 +1,4 @@
 import logo from "../../assets/logo_1.png";
-import VCardComponent from "./VCardComponent";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
 import { FaLinkedinIn } from "react-icons/fa6";
@@ -7,10 +6,14 @@ import { MdArrowForwardIos } from "react-icons/md";
 import { IoArrowRedoSharp } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import SmsSender from "../../components/SmsSender";
+import { apiUrl } from "../../utilities/url";
+
 
 const Profile = ({ user }) => {
   const [sendSms, setSendSms] = useState(false);
+  
   const {
+    _id,
     userPath,
     name,
     position,
@@ -23,21 +26,31 @@ const Profile = ({ user }) => {
     status,
     date,
   } = user;
+  const [activeProfile,setActiveProfile] = useState(false)
 
-  const vCardData = {
-    fullName: name,
-    officeName: organization,
-    position: position,
-    workNumber: work_tel,
-    tel: tel,
-    email: email,
-    linkedin: LinkedIn_url,
-  };
-  const pageTitle = name || "user"
+  const downloadVcard = (id) =>{
+      
+      try {
+        // Trigger the download by opening a new window or making a request
+        window.open(`${apiUrl}/vcard?id=${id}`);
+      } catch (error) {
+        console.error('Error downloading vCard:', error);
+      }
+  }
+  const pageTitle = name || "partner"
   useEffect(()=>{
-    document.title = `youman|${pageTitle}`
-  })
+    document.title = `youman | ${pageTitle}`
 
+    setTimeout(() => {
+        if(status == "inactive"){
+          setActiveProfile(true)
+        }
+    }, 1000);
+  },[status])
+  
+  const openLinkedInPage = () => {
+    window.open(LinkedIn_url, '_blank');
+  };
   return (
     <section className="content-container bg-white profile overflow-hidden relative">
       <div className="card_section">
@@ -56,7 +69,7 @@ const Profile = ({ user }) => {
         </div>
       </div>
 
-      <section className="md:max-h-[440px] max-h-[403px]">
+      <section className="md:max-h-[440px] max-h-[385px]">
         <div
           className={`grid grid-cols-1 justify-items-center   space-y-4  ${
             sendSms && "hidden transition-all duration-75"
@@ -67,10 +80,12 @@ const Profile = ({ user }) => {
           </h1>
           <h3 className="md:text-3xl text-lg font-bold "> {position}</h3>
           <div className="grid grid-cols-2 gap-2 my-4">
-            <VCardComponent
-              data={vCardData}
-              className="bg-black uppercase font-serif  text-sm text-white md:px-10 md:py-3 px-6 py-2 rounded-3xl border-white border-4 shadow-lg"
-            />
+          <button
+              className="bg-black font-serif text-sm uppercase text-white md:px-10 px-6 py-2 md:py-3 rounded-3xl border-white border-4 shadow-lg"
+              onClick={() => downloadVcard(_id)}
+            >
+              contact
+            </button>
 
             <button
               className="bg-black font-serif text-sm uppercase text-white md:px-10 px-6 py-2 md:py-3 rounded-3xl border-white border-4 shadow-lg"
@@ -95,7 +110,7 @@ const Profile = ({ user }) => {
               <FaPhone />
               {tel} <MdArrowForwardIos />
             </li>
-            <li className="shadow-sm flex justify-between items-center   p-2 ">
+            <li onClick={openLinkedInPage} className="shadow-sm flex justify-between items-center cursor-pointer  p-2 ">
               <FaLinkedinIn /> <span className="text-[12px]">{LinkedIn_url}</span>{" "}
               <IoArrowRedoSharp />
             </li>
@@ -104,18 +119,24 @@ const Profile = ({ user }) => {
           
         </div>
 
-        <SmsSender active={sendSms} setSendSms={setSendSms} />
+        <SmsSender partnerEmail={email} partnerName={name} setSendSms={setSendSms} active={sendSms}/>
       </section>
 
 
-      {status === "inactive" && (
-            <div className="z-20 absolute top-0 left-0  w-full min-h-[100%] bg-[rgba(18,17,17,0.93)] flex justify-center items-center px-4">
-              <h2 className="rotate-12 text-2xl text-slate-300 text-center">
-                Please Subscribe your Account
-              </h2>
-            </div>
+      {activeProfile && (
+            <section className="z-20  absolute top-0 left-0 w-full flex justify-center items-end h-full bg-[rgba(255,255,255,0.71)] ">
+                    <div className="max-w-[310px] shadow-slate-500 shadow-md text-center space-y-4 bg-[#1b1a1a] rounded-xl p-2 m-3">
+                            <div className="border-b-2 border-b-slate-400 p-3 text-white md:space-y-8 space-y-2 mb-3">
+                                <h2 className=" text-2xl font-thin  text-red-500 tracking-wide">Membership Expired!</h2>
+                                <p className="font-thin text-sm tracking-normal">Your Youman Catalyst membership has expired! Please renew your subscription</p>
+                            </div>
+                            <a className="text-green-700 font-bold uppercase text-lg tracking-wide" href="https://store.youman.one/product/catalyst" target="_blank">renew</a>
+                    </div>
+              </section>
           )}
     </section>
+    
+  
   );
 };
 

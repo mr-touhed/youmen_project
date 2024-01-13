@@ -1,1 +1,1 @@
-export const  apiUrl  = import.meta.env.VITE_APP_API_URL
+export const  apiUrl  = import.meta.env.VITE_APP_API_URL_LOCAL // change for testing deploy

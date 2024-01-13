@@ -19,6 +19,7 @@ import VerifyAdmin from "../authentication/VerifyAdmin";
       <Profile/>
       </VerifyProfile>
    
+   
   },
     {
       path: "/",

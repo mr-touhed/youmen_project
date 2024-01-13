@@ -10,6 +10,9 @@
 *{
   font-family: 'Poppins', sans-serif;
 }
+input::placeholder {
+  font: 12px sans-serif;
+  }
 
 .layout{
     @apply mx-[6%]

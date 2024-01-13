@@ -2,7 +2,7 @@ import { useState } from "react";
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/dist/sweetalert2.css';
 import { apiUrl } from "../../utilities/url";
-import loadingImg from "../../../public/Spinner-1s-200px_1.svg?url"
+import loadingImg from "/Spinner-1s-200px_1.svg?url"
 // CommonJS
 // const swal = require('sweetalert2')
 

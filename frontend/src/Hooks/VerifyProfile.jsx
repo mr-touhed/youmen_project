@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { apiUrl } from "../utilities/url";
 import React, { useEffect, useState } from "react";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
+import ProfileLoader from "../components/ProfileLoader";
 
 const VerifyProfile = ({children}) => {
     const [loading,setLoading] = useState(false)
@@ -35,7 +36,7 @@ const VerifyProfile = ({children}) => {
 
 
     if(loading){
-        return "loading......"
+        return <ProfileLoader/>
     }
 
     if(error){

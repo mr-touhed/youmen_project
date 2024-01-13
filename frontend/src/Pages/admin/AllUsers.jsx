@@ -1,9 +1,12 @@
 
 import {  useEffect, useState } from "react";
 import GetAllUsersHooks from "../../Hooks/GetAllUsersHooks";
-import { FiEdit } from "react-icons/fi";
-import { GrView } from "react-icons/gr";
+import Swal from 'sweetalert2'
 import { Link } from "react-router-dom";
+import { FcCancel,FcSupport,FcShare    } from "react-icons/fc";
+import { apiUrl } from "../../utilities/url";
+
+
 const readableTime = (time) =>{
 
   const inputDateString = time || new Date();
@@ -26,6 +29,7 @@ return formattedDate; // Output: 12/14/2023 10:24
 
 }
 
+
 const AllUsers = () => {
     const {loading,allUsers} = GetAllUsersHooks()
     const [showInfo,setShowInfo] = useState([...allUsers])
@@ -43,7 +47,17 @@ const AllUsers = () => {
         return "Loading...."
     }
 
-    
+    const handelSearch = (e) =>{
+      const inputValue = e.target.value;
+      const filterUser = allUsers.filter(user => user.userPath?.split("/")[0] == inputValue)
+      
+      if(!inputValue){
+        setShowInfo([...allUsers])
+        
+      }else{
+        setShowInfo(filterUser)
+      }
+          }
     
         
         
@@ -65,14 +79,56 @@ const AllUsers = () => {
             }
         }
 
+
+      const handelRemove = (_id) =>{
+          
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              console.log(_id)
+              fetch(`${apiUrl}/delete?id=${_id}`,{
+                method:"DELETE"
+              })
+              .then(res=> res.json())
+              .then(data => {
+                  if(data.result){
+                    const update_users = showInfo.filter(user => user._id !== _id)
+                    setShowInfo(update_users)
+                    Swal.fire(
+                      'Deleted!',
+                      'Your file has been deleted.',
+                      'success'
+                    )
+                  }else{
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Something went wrong!',
+                      
+                    })
+                  }
+              })
+
+              
+            }
+          })
+
+      }
         
     return (
         <>
         <div className="content-container h-8 bg-slate-500 mt-6 flex justify-between items-center" >
-                <div>
+                <div className="ml-6">
                     {/* other oparetion  */}
 
-                    
+                    <input onChange={handelSearch} type="search" name="" id="" placeholder="search by catalyst number" className="px-2 focus:outline-0 bg-slate-100 focus:bg-white"/>
                 </div>
 
 
@@ -81,7 +137,7 @@ const AllUsers = () => {
                 <label htmlFor="status" className="text-white">status:</label>
 
                     <select name="status" id="cars" onChange={filterUser} defaultValue="all">
-                    <option value="all">All User</option>
+                    <option value="all">all users</option>
                     <option value="active">active</option>
                     <option value="inactive">inactive</option>
 
@@ -117,16 +173,17 @@ const AllUsers = () => {
                                 }
                                  
                                 
-                                console.log(user)
-                              return  (<tr className="border-b dark:border-neutral-500" key={_id}>
+                               
+                              return  (<tr className={`border-b dark:border-neutral-500 ${index%2 == 0 ? "bg-slate-100": ""} hover:bg-slate-200`} key={_id}>
                           <td className="whitespace-nowrap px-6 py-4 font-medium">{index + 1}</td>
                           <td className="whitespace-nowrap px-6 py-4">{readableTime(create)}</td>
                           <td className="whitespace-nowrap px-6 py-4">{catalist}</td>
                           <td className="whitespace-nowrap px-6 py-4">{name}</td>
                           <td className="whitespace-nowrap px-6 py-4">{status}</td>
                           <td className="whitespace-nowrap px-6 py-4 flex gap-4">
-                                    <Link  to={ `/admin/user/${_id}/edit?param1=${userPath}`}><FiEdit className="w-6 h-6 text-emerald-900 hover:text-emerald-400"/></Link>
-                                    <Link to={`/profile/${catalist}/artk/${url}`} target="_blank"><GrView className="w-6 h-6 text-red-900 hover:text-red-400" /></Link>
+                                    <Link  to={ `/admin/user/${_id}/edit?param1=${userPath}`}><FcSupport title="edit"  className="w-6 h-6 text-emerald-900 hover:text-emerald-400"/></Link>
+                                    <Link to={`/profile/${catalist}/artk/${url}`} target="_blank"><FcShare title="view"   className="w-6 h-6 text-red-900 hover:text-red-400" /></Link>
+                                    <button onClick={()=>handelRemove(_id)}><FcCancel title="delete" className="w-6 h-6"/></button>
                             
                             </td>
                         </tr>)
