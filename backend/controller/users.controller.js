@@ -1,8 +1,8 @@
 const { ObjectId } = require("mongodb")
 const { userCollection } = require("../model/mongoDB")
 
-
-
+const  vCardsJS = require('vcards-js');
+const vCard = vCardsJS();
 
 // add new user and store DB
 const addUser = async (req,res) =>{
@@ -92,6 +92,35 @@ const deleteUser = async (req,res) =>{
     
 }
 
+const getVcard = async (req,res) =>{
+    try {
+        const {id} =req.query;
+    const query = {_id: new ObjectId(id)}
+    const user = await userCollection.findOne(query)
+    const {name,position,organization,email,img,tel,work_tel,LinkedIn_url} = user
+    vCard.isOrganization = true;
+    vCard.firstName = name;
+    vCard.homePhone = tel;
+    vCard.workPhone = work_tel;
+    vCard.email = email;
+    vCard.organization = organization;
+    vCard.role = position;
+    vCard.logo.attachFromUrl(img, 'JPEG');
+    vCard.socialUrls['linkedIn'] = LinkedIn_url;
+
+
+    // Set response headers for downloading the file
+  res.setHeader('Content-Type', 'text/vcard');
+  res.setHeader('Content-Disposition', `attachment; filename=${name}_contact.vcf`);
+          // Send the vCard as a response
+        res.send(vCard.getFormattedString());
+    } catch (error) {
+        
+    }
+}
+
+
+
 module.exports = {
-    addUser,singelUser,update_user,deleteUser,AllUsers
+    addUser,singelUser,update_user,deleteUser,AllUsers,getVcard
 }
