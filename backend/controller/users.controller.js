@@ -95,9 +95,11 @@ const deleteUser = async (req,res) =>{
 const getVcard = async (req,res) =>{
     try {
         const {id} =req.query;
-    const query = {_id: new ObjectId(id)}
+        const query = {_id:new ObjectId(id)}
     const user = await userCollection.findOne(query)
     const {name,position,organization,email,img,tel,work_tel,LinkedIn_url} = user
+    const imgExtention = img.split(".")[img.split(".").length-1]
+    
     vCard.isOrganization = true;
     vCard.firstName = name;
     vCard.homePhone = tel;
@@ -105,7 +107,7 @@ const getVcard = async (req,res) =>{
     vCard.email = email;
     vCard.organization = organization;
     vCard.title = position;
-    vCard.photo.embedFromFile(img)
+    vCard.photo.attachFromUrl(img, imgExtention);
     vCard.socialUrls['linkedIn'] = LinkedIn_url;
     vCard.url = LinkedIn_url;
 
@@ -116,6 +118,7 @@ const getVcard = async (req,res) =>{
           // Send the vCard as a response
         res.send({vcard:vCard.getFormattedString()});
     } catch (error) {
+        console.log(error)
         res.status(404).json({result:false,massage:"some thing went wrong", error})
     }
 }
