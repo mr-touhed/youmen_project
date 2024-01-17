@@ -2,24 +2,25 @@ const { ObjectId } = require("mongodb")
 const { userCollection } = require("../model/mongoDB")
 
 const  vCardsJS = require('vcards-js');
+const {  getImageBase64 } = require("../utils/base64Convert");
 const vCard = vCardsJS();
 
 // add new user and store DB
 const addUser = async (req,res) =>{
     
     try{
-        const {userPath,name,position,organization,email,img,tel,work_tel,LinkedIn_url,status} = (req.body)
-      
-      
-      const newUser = {userPath:userPath.toLowerCase(),name,position,organization,email,img,tel,work_tel,LinkedIn_url,status,date: new Date()}
+            
+        
+        const path = req.body.user_path
      
-      const existUser =await  userCollection.findOne({userPath:userPath})
-     
+      const existUser =await  userCollection.findOne({userPath:path})
+        
       if(existUser){
+       
        return res.status(404).json({result:false,massage:"user name alrady exist"})
       }
       
-      const result = await  userCollection.insertOne(newUser)
+      const result = await  userCollection.insertOne(req.body)
       
       res.status(200).json({result:true,massage:"add successfuly", result})
       }catch(err){
@@ -29,12 +30,13 @@ const addUser = async (req,res) =>{
 
 
 const singelUser = async(req,res) =>{
+   try {
     const {path} = req.query;
     const urlPath = path.toLowerCase()
    
-    const query = { userPath: { $regex: urlPath, $options: "i" } };
+    const query = { user_path: { $regex: urlPath, $options: "i" } };
     const user = await userCollection.findOne(query)
-   
+    console.log(user)
     if(user === null){
        return res.status(404).json({result:false,massage:"user not found"})
         
@@ -42,6 +44,9 @@ const singelUser = async(req,res) =>{
         
        res.status(200).json({result:true,massage:"user found", user})
     }
+   } catch (error) {
+        return res.status(404).json({result:false,massage:"user not found"})
+   }
 }
 
 
@@ -55,12 +60,12 @@ const AllUsers = async(req,res) =>{
 
 const update_user =async (req,res) =>{
     try {
-        const {userPath,name,position,organization,email,tel,work_tel,LinkedIn_url,status,_id}=(req.body)
-    const filter = {_id: new ObjectId(_id)}
+        const {id,user_path,name,position,office,email,tel,work_tel,status,socialLinks}=(req.body)
+    const filter = {_id: new ObjectId(id)}
     const updateDocument = {
         $set: {
-            userPath,
-            name,position,organization,email,tel,work_tel,LinkedIn_url,status
+            user_path,
+            user_name:name,position,office,email,tel,work_tel,social_links:socialLinks,status
         },
      };
 
@@ -99,7 +104,9 @@ const getVcard = async (req,res) =>{
     const user = await userCollection.findOne(query)
     const {name,position,organization,email,img,tel,work_tel,LinkedIn_url} = user
     const imgExtention = img.split(".")[img.split(".").length-1]
-    
+    const convertImg = await getImageBase64(img)
+   
+    vCard.logo.embedFromString(convertImg, `image/${imgExtention}`)
     vCard.isOrganization = true;
     vCard.firstName = name;
     vCard.homePhone = tel;
@@ -112,9 +119,9 @@ const getVcard = async (req,res) =>{
     vCard.url = LinkedIn_url;
 
 
-    // Set response headers for downloading the file
-  res.setHeader('Content-Type', 'text/vcard');
-  res.setHeader('Content-Disposition', `attachment; filename=${name}_contact.vcf`);
+  //set content-type and disposition including desired filename
+  res.set('Content-Type', `text/vcard; name="${name}.vcf"`);
+  res.set('Content-Disposition', `inline; filename="${name}.vcf"`);
           // Send the vCard as a response
         res.send({vcard:vCard.getFormattedString()});
     } catch (error) {
