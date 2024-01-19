@@ -154,11 +154,12 @@ const sendMail = async (req,res) =>{
         name,
         email,
         phone,
-        sendTo
+        sendTo,
+        partner
       } = req.body
     try {
        
-          const response = await sendingEmail(email,sendTo,name,phone)
+          const response = await sendingEmail(email,sendTo,name,phone,partner)
           console.log(res, "response............")
           if(response){
             return res.status(200).json({result:true,massage:"send massage successfully"})

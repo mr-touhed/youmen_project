@@ -33,7 +33,7 @@ const [emailInfo,setEmailInfo] = useState({name:"",email:"",phone:""})
 
 
     const sendEmail =async (e) =>{
-        const mailData = {...emailInfo,sendTo:partnerEmail}
+        const mailData = {...emailInfo,sendTo:partnerEmail,partner:partnerName}
         e.preventDefault()
         setloading(true)
         const res = await fetch(`${apiUrl}/email`,{
@@ -59,6 +59,7 @@ const [emailInfo,setEmailInfo] = useState({name:"",email:"",phone:""})
                 icon: "error",
                 title: "Something went wrong"
               });
+              console.log(data)
         }
     }
     const PartnerNickName = partnerName?.split(" ")[0].toUpperCase() || "---"
