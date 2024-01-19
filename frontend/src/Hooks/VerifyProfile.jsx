@@ -8,12 +8,12 @@ const VerifyProfile = ({children}) => {
     const [loading,setLoading] = useState(false)
     const [user,setUser] = useState({})
     const [error,setError] = useState(false)
-    const {id,path} = useParams()
+    const {id,path,artk} = useParams()
     
     useEffect(() =>{
 
         setLoading(true)
-        fetch(`${apiUrl}/user?path=${id}/ARTK/${path}`)
+        fetch(`${apiUrl}/user?path=${id}/${artk}/${path}`)
         .then(res => {
             console.log(res , "......................................")
             if(!res.ok){

@@ -14,7 +14,7 @@ import VerifyAdmin from "../authentication/VerifyAdmin";
 
  export const router = createBrowserRouter([
   {
-    path:"/profile/:id/artk/:path",
+    path:"/profile/:id/:artk/:path",
     element: <VerifyProfile>
       <Profile/>
       </VerifyProfile>

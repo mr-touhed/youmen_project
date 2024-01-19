@@ -3,6 +3,7 @@ const { userCollection } = require("../model/mongoDB")
 
 const  vCardsJS = require('vcards-js');
 const {  getImageBase64 } = require("../utils/base64Convert");
+const sendingEmail = require("../utils/sendMail");
 const vCard = vCardsJS();
 
 // add new user and store DB
@@ -97,58 +98,79 @@ const deleteUser = async (req,res) =>{
     
 }
 
-const getVcard = async (req,res) =>{
-    try {
-        const {id} =req.query;
-        const query = {_id:new ObjectId(id)}
-    const user = await userCollection.findOne(query)
-    console.log(user)
-    const {user_name,position,office,email,img,tel,work_tel,social_links} = user
-    const imgExtention = img.split(".")[img.split(".").length-1]
-    const convertImg = await getImageBase64(img)
-    const fbLink = social_links.find(link => link.web_name === "facebook");
-    const linkedIn = social_links.find(link => link.web_name === "linkedIn");
-    const other_link = social_links.find(link => link.web_name === "others");
+// const getVcard = async (req,res) =>{
+//     try {
+//         const {id} =req.query;
+//         const query = {_id:new ObjectId(id)}
+//     const user = await userCollection.findOne(query)
+//     console.log(user)
+//     const {user_name,position,office,email,img,tel,work_tel,social_links} = user
+//     const imgExtention = img.split(".")[img.split(".").length-1]
+//     const convertImg = await getImageBase64(img)
+//     const fbLink = social_links.find(link => link.web_name === "facebook");
+//     const linkedIn = social_links.find(link => link.web_name === "linkedIn");
+//     const other_link = social_links.find(link => link.web_name === "others");
 
-    vCard.logo.embedFromString(convertImg, `image/${imgExtention}`)
-    vCard.version = '3.0';
-    vCard.isOrganization = true;
-    vCard.firstName = user_name;
-    vCard.homePhone = tel;
-    if(work_tel){
-        vCard.workPhone = work_tel;
-    }
-    vCard.email = email;
-    vCard.organization = office;
-    vCard.title = position;
-    vCard.photo.attachFromUrl(img, imgExtention);
-    if(fbLink){
-        vCard.socialUrls['facebook'] = fbLink.link;
-        vCard.url=fbLink.link
-    }
-    if(linkedIn){
-        vCard.socialUrls['linkedIn'] = linkedIn.link;
-        vCard.url=linkedIn.link
-    }
-    if(other_link){
-        vCard.socialUrls['custom'] = other_link.link;
-        vCard.url=other_link.link
-    }
+//     vCard.logo.embedFromString(convertImg, `image/${imgExtention}`)
+//     vCard.version = '3.0';
+//     vCard.isOrganization = true;
+//     vCard.firstName = user_name;
+//     vCard.homePhone = tel;
+//     if(work_tel){
+//         vCard.workPhone = work_tel;
+//     }
+//     vCard.email = email;
+//     vCard.organization = office;
+//     vCard.title = position;
+//     vCard.photo.attachFromUrl(img, imgExtention);
+//     if(fbLink){
+//         vCard.socialUrls['facebook'] = fbLink.link;
+//         vCard.url=fbLink.link
+//     }
+//     if(linkedIn){
+//         vCard.socialUrls['linkedIn'] = linkedIn.link;
+//         vCard.url=linkedIn.link
+//     }
+//     if(other_link){
+//         vCard.socialUrls['custom'] = other_link.link;
+//         vCard.url=other_link.link
+//     }
     
 
-//   //set content-type and disposition including desired filename
-  res.set('Content-Type', `text/vcard; name="${user_name}.vcf"`);
-  res.set('Content-Disposition', `inline; filename="${user_name}.vcf"`);
-//           // Send the vCard as a response
-        res.send({vcard:vCard.getFormattedString()});
+// //   //set content-type and disposition including desired filename
+//   res.set('Content-Type', `text/vcard; name="${user_name}.vcf"`);
+//   res.set('Content-Disposition', `inline; filename="${user_name}.vcf"`);
+// //           // Send the vCard as a response
+//         res.send({vcard:vCard.getFormattedString()});
+//     } catch (error) {
+//         console.log(error)
+//         res.status(404).json({result:false,massage:"some thing went wrong", error})
+//     }
+// }
+
+const sendMail = async (req,res) =>{
+    console.log(req.body)
+    const {
+        name,
+        email,
+        phone,
+        sendTo
+      } = req.body
+    try {
+       
+          const response = await sendingEmail(email,sendTo,name,phone)
+          console.log(res, "response............")
+          if(response){
+            return res.status(200).json({result:true,massage:"send massage successfully"})
+          }
     } catch (error) {
-        console.log(error)
+        console.log(error, "block error,,,,,,,,,,,")
         res.status(404).json({result:false,massage:"some thing went wrong", error})
     }
+
 }
 
 
-
 module.exports = {
-    addUser,singelUser,update_user,deleteUser,AllUsers,getVcard
+    addUser,singelUser,update_user,deleteUser,AllUsers,sendMail
 }

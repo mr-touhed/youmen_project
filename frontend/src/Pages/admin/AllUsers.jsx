@@ -31,7 +31,7 @@ return formattedDate; // Output: 12/14/2023 10:24
 
 
 const AllUsers = () => {
-    const {loading,allUsers} = GetAllUsersHooks()
+    const {loading,allUsers =[]} = GetAllUsersHooks()
     const [showInfo,setShowInfo] = useState([...allUsers])
 
 
@@ -145,7 +145,7 @@ const AllUsers = () => {
                 </div>
         </div>
         {
-            true && 
+            showInfo && 
             <div className="flex flex-col content-container border-l-2 border-r-2">
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -164,25 +164,25 @@ const AllUsers = () => {
                       <tbody>
                         {
                             showInfo.map((user,index) =>{
-                                const {name,status,userName,_id,create,userPath} = user
+                                const {user_name,status,_id,createAt,user_path} = user
                                 let catalist;
-                                let url;
-                                if(userPath){
-                                  catalist = userPath.split("/")[0]
-                                  url = userPath.split("/")[2]
+                                
+                                if(user_path){
+                                  catalist = user_path.split("/")[0]
+                                  
                                 }
                                  
                                 
                                
                               return  (<tr className={`border-b dark:border-neutral-500 ${index%2 == 0 ? "bg-slate-100": ""} hover:bg-slate-200`} key={_id}>
                           <td className="whitespace-nowrap px-6 py-4 font-medium">{index + 1}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{readableTime(create)}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{readableTime(createAt)}</td>
                           <td className="whitespace-nowrap px-6 py-4">{catalist}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{name}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{user_name}</td>
                           <td className="whitespace-nowrap px-6 py-4">{status}</td>
                           <td className="whitespace-nowrap px-6 py-4 flex gap-4">
-                                    <Link  to={ `/admin/user/${_id}/edit?param1=${userPath}`}><FcSupport title="edit"  className="w-6 h-6 text-emerald-900 hover:text-emerald-400"/></Link>
-                                    <Link to={`/profile/${catalist}/artk/${url}`} target="_blank"><FcShare title="view"   className="w-6 h-6 text-red-900 hover:text-red-400" /></Link>
+                                    <Link  to={ `/admin/user/${_id}/edit?param1=${user_path}`}><FcSupport title="edit"  className="w-6 h-6 text-emerald-900 hover:text-emerald-400"/></Link>
+                                    <Link to={`/profile/${user_path}`} target="_blank"><FcShare title="view"   className="w-6 h-6 text-red-900 hover:text-red-400" /></Link>
                                     <button onClick={()=>handelRemove(_id)}><FcCancel title="delete" className="w-6 h-6"/></button>
                             
                             </td>
