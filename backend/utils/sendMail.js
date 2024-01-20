@@ -47,7 +47,9 @@ function convertDateToString(date) {
 
 
 const transporter = nodemailer.createTransport({
-    service:"Gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
     auth: {
       // TODO: replace `user` and `pass` values from <https://forwardemail.net>
       user: process.env.SMS_EMAIL,
