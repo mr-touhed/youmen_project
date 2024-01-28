@@ -32,7 +32,7 @@ return formattedDate; // Output: 12/14/2023 10:24
 
 const AllUsers = () => {
     const {loading,allUsers =[]} = GetAllUsersHooks()
-    const [showInfo,setShowInfo] = useState([...allUsers])
+    const [showInfo,setShowInfo] = useState([...allUsers] || [])
 
 
 
@@ -166,9 +166,10 @@ const AllUsers = () => {
                             showInfo.map((user,index) =>{
                                 const {user_name,status,_id,createAt,user_path} = user
                                 let catalist;
-                                
+                                let name;
                                 if(user_path){
                                   catalist = user_path.split("/")[0]
+                                  name= user_path.split("/")[1]
                                   
                                 }
                                  
@@ -181,7 +182,7 @@ const AllUsers = () => {
                           <td className="whitespace-nowrap px-6 py-4">{user_name}</td>
                           <td className="whitespace-nowrap px-6 py-4">{status}</td>
                           <td className="whitespace-nowrap px-6 py-4 flex gap-4">
-                                    <Link  to={ `/admin/user/${_id}/edit?param1=${user_path}`}><FcSupport title="edit"  className="w-6 h-6 text-emerald-900 hover:text-emerald-400"/></Link>
+                                    <Link  to={ `/admin/user/${_id}/edit`} ><FcSupport title="edit"  className="w-6 h-6 text-emerald-900 hover:text-emerald-400"/></Link>
                                     <Link to={`/profile/${user_path}`} target="_blank"><FcShare title="view"   className="w-6 h-6 text-red-900 hover:text-red-400" /></Link>
                                     <button onClick={()=>handelRemove(_id)}><FcCancel title="delete" className="w-6 h-6"/></button>
                             

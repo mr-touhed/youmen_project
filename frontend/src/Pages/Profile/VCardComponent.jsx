@@ -61,6 +61,7 @@ const VCardComponent = ({ data,className }) => {
 `ORG;CHARSET=UTF-8:${office}`,
 `URL;TYPE=facebook:${(social_links.find(l => l.web_name === "facebook"))?.link}`,
 `URL;TYPE=linkedin:${(social_links.find(l => l.web_name === "linkedIn"))?.link}`,
+`URL;TYPE=instagram:${(social_links.find(l => l.web_name === "instagram"))?.link}`,
 `URL;TYPE=others:${(social_links.find(l => l.web_name === "others"))?.link}`,
 `REV:${new Date()}`,
 "END:VCARD"

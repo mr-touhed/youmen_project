@@ -9,6 +9,7 @@
 
 *{
   font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
 }
 input::placeholder {
   font: 12px sans-serif;
@@ -38,10 +39,10 @@ input::placeholder {
   }
   
   .card_section {
-    @apply bg-[url(./assets/bg.png)] bg-[#000000e0]  bg-top md:bg-cover bg-contain bg-no-repeat relative after:content-[""] after:absolute after:bottom-0  after:w-full after:h-[50%] after:bg-gradient-to-t from-[#ffffff] from-[45%] to-[rgba(255,255,255,0)]
+    @apply bg-[url(./assets/bg.png)] bg-[#000000ea]  bg-top  md:[length:100%_100%]  bg-[length:100%_100%]    bg-no-repeat relative after:content-[""] after:absolute after:bottom-0  after:w-full after:h-[40%] after:bg-gradient-to-t from-[#ffffff]  to-[rgba(255,255,255,0)]
   }
   .profile {
-    @apply bg-[url(./assets/footer_bg.png)] bg-[90%_100%] md:bg-[90%_150%] bg-no-repeat bg-contain;
+    @apply bg-[url(./assets/footer_bg.png)] bg-[20%_100%] md:bg-[90%_150%] bg-no-repeat bg-contain ;
   }
 
   button[disabled]{
@@ -57,4 +58,62 @@ input::placeholder {
  .active-sms{
     transform: translateY(0);
     transition: transform 0.5s ease;
+  }
+
+  svg{
+    width: 30rem;
+    position: relative;
+  }
+
+  svg text.text-body{
+    stroke: white;
+    fill: white;
+    animation:  2s both animate-stock infinite;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .loading svg text{
+    font-size: 4rem;
+    stroke-width: 2;
+    letter-spacing: 5px;
+  }
+  .loading svg path{
+    stroke: white;
+    fill: white;
+    transform:matrix(0.000086, -1, 1, 0.000086, -151.244174, 457.662391);
+    animation:  2s both animate-stock infinite;
+    transition: animation 2s ease-out;
+  }
+
+
+
+
+
+
+
+
+
+
+  @keyframes animate-stock{
+    0%{
+      fill: transparent;
+      stroke: white;
+      stroke-width: 3;
+      stroke-dashoffset: 25%;
+      stroke-dasharray: 0 32%;
+    }
+    50%{
+      fill: transparent;
+      stroke: white;
+      stroke-width: 3;
+     
+    }
+    80%{
+      fill: transparent;
+      stroke: white;
+      stroke-width: 0;
+      stroke-dashoffset: -25%;
+      stroke-dasharray:  32% 0;
+    }
+    
   }

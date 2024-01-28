@@ -4,37 +4,27 @@ import 'sweetalert2/dist/sweetalert2.css';
 import { apiUrl } from "../../utilities/url";
 import loadingImg from "/Spinner-1s-200px_1.svg?url"
 import { IoCloseSharp } from "react-icons/io5";
-import { FaLinkedin } from "react-icons/fa";
+import { v4 as uuidv4 } from 'uuid';
+import DynamicSocialMedia from "../../Hooks/DynamicSocialMedia";
 // CommonJS
 // const swal = require('sweetalert2')
 
-const userData = {email:"",office:"",position:"",status:"active",img:"",tel:"",user_name:"",user_path:"",work_tel:"",social_links:[], createAt:new Date()}
+const userData = {email:"",office:"",position:"",status:"active",img:"",tel:"",user_name:"",user_path:"",work_tel:"",address:"",social_links:[], createAt:new Date()}
 
 const AddUser = () => {
+   
     const [errorSms,seterrorSms]= useState('')
     const [loading,setLoading] = useState(false)
     const [img,setimg] = useState("")
     const [perfectImg,setPerfectImg] = useState(true)
-    
-    const [socialLinks,setSocialLinks] = useState([{id:1,link:"",web_name:""}])
+    const {sections,addSection,handleInputChange,handleSelectChange,removeSection} = DynamicSocialMedia()
+
     const [newUser,setNewuser] = useState(userData)
 useEffect(()=>{
-    setNewuser(state => ({...state,social_links: socialLinks}))
-},[socialLinks])
-    const addmoreLink = () =>{
-        const addnewFild = [...socialLinks,{id:socialLinks.length + 1,link:""}]
-        setSocialLinks(addnewFild)
-    }
-    const removeLinkField =(i) =>{
-        console.log(i)
-        const newLink = [...socialLinks]
-        newLink.splice(i,1)
-        
-        setSocialLinks(newLink)
-        console.log(newLink)
-        
-    }
-
+    setNewuser(state => ({...state,social_links: sections}))
+},[sections])
+    
+  
         const change_field_value = (e) =>{
                 const property = e.target.name;
                 const property_value = e.target.value.trim()
@@ -43,24 +33,8 @@ useEffect(()=>{
             
         }
 
-    const socialUrl = (e,id) =>{
-            const value = e.target.value;
-            const find_link = socialLinks.find(link => link.id === id)
-            const other_link = socialLinks.filter(link => link.id !== id)
-            if(find_link){
-                find_link[e.target.name] =  value
-                const update_links =  [...other_link,find_link]
-                setSocialLinks(update_links)
-            }else{
-                alert("somethis wrong")
-            }
-            
-    }
-    const change_Social_Name = (e,id) =>{
-        const value = e.target.value;
-        const find_link = socialLinks.find(link => link.id === id)
-        find_link.web_name = value
-    }
+    
+   
 
     // convert image 64base 
     const convertbase64 = (img) =>{
@@ -114,16 +88,9 @@ useEffect(()=>{
         seterrorSms("")
         e.preventDefault()
         const form = e.target;
-        // const userPath = form.user_path.value;
-        // const name = form.name.value;
-        // const position = form.position.value;
-        // const organization = form.office.value;
-        // const email = form.email.value;
-        // const tel = form.tel.value;
-        // const work_tel = form.work_tel.value;
+       
         const image = (form.image.files[0]);
-        // const LinkedIn_url = form.LinkedIn_url.value;
-        // const status = form.status.value;
+      
         
             if(!perfectImg){
                return seterrorSms("")
@@ -222,8 +189,8 @@ useEffect(()=>{
                             {/* user path div  */}
                             <div>
                                 <small>user path</small>
-                                <input onChange={(e) =>change_field_value(e)} type="text" name="user_path" id="" className="border-2 w-full p-2 bg-slate-50" placeholder="profile path" pattern="\d{4}/[A-Z]{4}/[a-zA-Z0-9\-]*" required/>
-                                <small className="text-[10px]">XXXX/ABCD(any four latter)/abcd (15 charecter)</small>
+                                <input onChange={(e) =>change_field_value(e)} type="text" name="user_path" id="" className="border-2 w-full p-2 bg-slate-50" placeholder="profile path" pattern="\d{4}/[a-zA-Z0-9\-]*" required/>
+                                <small className="text-[10px]">XXXX/abcd (15 charecter)</small>
                             </div>
                                 {/* image div  */}
                             <div className="upload-file-container">
@@ -263,41 +230,20 @@ useEffect(()=>{
                             <div className="grid grid-cols-2 justify-between gap-6">
                             <div>
                                 <small>Number</small>
-                                <input onChange={(e) =>change_field_value(e)} type="tel" name="tel" id="" className="border-2 w-full p-2 bg-slate-50" placeholder="" required/>
+                                <input onChange={(e) =>change_field_value(e)} type="tel" name="tel" id="" className="border-2 w-full p-2 bg-slate-50" placeholder="" defaultValue="+880" required/>
                             </div>
                             <div>
                             <small>Number (Work) <span className="text-[9px]">(optional)</span></small>
-                                <input onChange={(e) =>change_field_value(e)} type="tel" name="work_tel" id="" className="border-2 w-full p-2 bg-slate-50" placeholder="" />
+                                <input onChange={(e) =>change_field_value(e)} type="tel" name="work_tel" id="" className="border-2 w-full p-2 bg-slate-50" placeholder="" defaultValue="+880"/>
                             </div>
                     </div>
 
                     <div className="grid grid-cols-2 justify-between gap-6">
-                        {/* social link div  */}
-                                <div className="border-2 mt-6 p-2">
-                                <p className="text-center">Social Links</p>
-                                    {
-                                       socialLinks&& socialLinks.map((link,i) => <div key={i}>
-                                           
-                                                <div className="flex items-center">
-                                                <select onChange={(e)=> change_Social_Name(e,link.id)} className="text-[12px] bg-slate-300  border border-r-0 py-3 " name="web_name" id="cars" value={link.web_name}>
-                                                
-                                        <option className="text-[10px] " value="linkedIn ">linkedIn</option>
-                                        <option className="text-[10px]" value="facebook">facebook</option>
-                                        <option className="text-[10px]" value="others">others</option>
-                                        
-                                        </select>
-                                                <input onChange={(e)=> socialUrl(e,link.id)} type="url" name="link" id="" className="border border-l-0 w-full py-[9px] bg-slate-50" placeholder="" value={link.link}/>
-                                                {
-                                                    (socialLinks.length > 1 && i !==0 ) && <IoCloseSharp onClick={() =>removeLinkField(i)}/>
-                                                }
-                                                </div>
-                                            </div>)
-                                    }
-                                    {
-                                        socialLinks.length < 3 && <span  className="text-[10px] cursor-pointer inline-block p-1 bg-slate-400 rounded-sm text-black mt-3" onClick={addmoreLink}>add more</span>
-                                    }
+                            <div>
+                            <div>
+                            <small>address Office/home <span className="text-[9px]">(optional)</span></small>
+                                <input onChange={(e) =>change_field_value(e)} type="tel" name="address" id="" className="border-2 w-full p-2 bg-slate-50" placeholder="" />
                             </div>
-                                    {/* status div */}
                             <div className="flex justify-center self-start mt-6 p-4 items-center bg-green-100">
                                     <label htmlFor="status">status:</label>
 
@@ -307,6 +253,36 @@ useEffect(()=>{
                                         
                                         </select>
                             </div>
+                            </div>
+                        {/* social link div  */}
+                        <div className="mt-6">
+                                <p className="text-center">social links</p>
+                                    {
+                                       sections&& sections.map((section,i) =>  <div key={i}>
+                                        
+                                            <small>{section.web_name}</small>
+                                                <div className="flex items-center">
+                                                <select value={section.web_name} onChange={(e) => handleSelectChange(section.id, e.target.value)} className="text-[12px] bg-slate-200 border border-r-0 py-3 " name="web_name"  >
+                                                <option className="text-[10px]" >choose</option>
+                                        <option className="text-[10px]" value="linkedIn">linkedIn</option>
+                                        <option className="text-[10px]" value="facebook">facebook</option>
+                                        <option className="text-[10px]" value="instagram">instagram</option>
+                                        <option className="text-[10px]" value="others">others</option>
+                                        
+                                        </select>
+                                                <input  value={section.link} onChange={(e) => handleInputChange(section.id, e.target.value)} type="url" name="link" id="" className="border border-l-0 w-full py-[9px] bg-slate-50" placeholder="" required/>
+                                                {
+                                                    (sections.length > 1 && i !==0) && <IoCloseSharp className="w-6 h-6 cursor-pointer" onClick={() => removeSection(section.id)}/>
+                                                }
+                                                </div>
+                                            </div>)
+                                    }
+                                    {
+                                        sections.length < 4 && <span  className="text-[10px] cursor-pointer inline-block p-1 bg-slate-400 rounded-sm text-black mt-3" onClick={addSection}>add more</span>
+                                    }
+                            </div>
+                                    {/* status div */}
+                            
                     </div>
 
                              

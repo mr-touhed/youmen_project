@@ -64,14 +64,14 @@ const [emailInfo,setEmailInfo] = useState({name:"",email:"",phone:""})
     }
     const PartnerNickName = partnerName?.split(" ")[0].toUpperCase() || "---"
     return (
-        <section className={`md:min-h-[440px] min-h-[403px] ${active ?"active-sms" :"sms-section "}`}>
+        <section className={`md:max-h-[520px]  max-h-[500px] ${active ?"active-sms" :"sms-section "}`}>
                     
                     <div className="grid grid-cols-1 space-y-3 max-w-xl mx-auto pb-8 px-6">
                     <div className="flex justify-between items-center my-6">
                     <h2 className="text-lg">Share Your contact information <br/> with {PartnerNickName} !</h2>
                     <FaWindowClose className="w-6 h-6 cursor-pointer" onClick={handelClose} />
                     </div>
-                            <form action="" className="space-y-4" onSubmit={sendEmail}>
+                            <form  className="space-y-4" onSubmit={sendEmail}>
                             <div className="flex flex-col">
                                 <span className="text-[12px] font-thin">Hello {PartnerNickName} ! my name is ...</span>
                             <input onChange={(e)=>getInputEmail(e)} type="text" name="name" id="" placeholder="your name" className="border p-2 bg-slate-50 rounded-md" />

@@ -2,18 +2,20 @@ import { useParams } from "react-router-dom";
 import { apiUrl } from "../utilities/url";
 import React, { useEffect, useState } from "react";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
-import ProfileLoader from "../components/ProfileLoader";
+import Loading from "../components/Loading";
 
 const VerifyProfile = ({children}) => {
+    const {id,path} = useParams()
+    const userPath = `${id}/${path}`
     const [loading,setLoading] = useState(false)
     const [user,setUser] = useState({})
     const [error,setError] = useState(false)
-    const {id,path,artk} = useParams()
+    const [show,setShow] = useState(true)
     
     useEffect(() =>{
 
         setLoading(true)
-        fetch(`${apiUrl}/user?path=${id}/${artk}/${path}`)
+        fetch(`${apiUrl}/user/profile?path=${userPath}`)
         .then(res => {
             console.log(res , "......................................")
             if(!res.ok){
@@ -29,14 +31,18 @@ const VerifyProfile = ({children}) => {
                     setLoading(false)
                 }
                 setUser(data.user)
-           
+                console.log("verify data.......",data)
             setLoading(false)
         })
-    },[id,path])
+
+        setTimeout(()=>{
+            setShow(false)
+        },1900)
+    },[userPath])
 
 
-    if(loading){
-        return <ProfileLoader/>
+    if(show || loading){
+        return <Loading/>
     }
 
     if(error){

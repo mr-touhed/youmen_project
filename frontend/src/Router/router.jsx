@@ -10,11 +10,12 @@ import VerifyProfile from "../Hooks/VerifyProfile";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 import EditUser from "../Pages/admin/EditUser";
 import VerifyAdmin from "../authentication/VerifyAdmin";
+import Loading from "../components/Loading";
 
 
  export const router = createBrowserRouter([
   {
-    path:"/profile/:id/:artk/:path",
+    path:"/profile/:id/:path",
     element: <VerifyProfile>
       <Profile/>
       </VerifyProfile>
@@ -62,6 +63,10 @@ import VerifyAdmin from "../authentication/VerifyAdmin";
     {
       path:"*",
       element: <ErrorPage/>
+    },
+    {
+      path: "loading",
+      element: <Loading/>
     }
     
   ]);

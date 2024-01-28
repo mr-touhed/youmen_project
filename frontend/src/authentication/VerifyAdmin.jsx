@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const VerifyAdmin = ({children}) => {
     const [admin,setAdmin] = useState(false)
+   
     const [loading,setLoading] = useState(false)
     const navigate = useNavigate()
     useEffect(()=>{
@@ -24,14 +25,18 @@ const VerifyAdmin = ({children}) => {
                 setLoading(false)
             }
         })
-    },[])
 
+
+        
+    },[])
+ 
     if(loading){
         return ;
     }
     if(!admin ){
        return  navigate("/")
-    }else{
+    }
+    if(admin){
         return children
     }
 };
