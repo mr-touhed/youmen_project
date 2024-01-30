@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { apiUrl } from "../utilities/url";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 
 const VerifyAdmin = ({children}) => {
-    const [admin,setAdmin] = useState(false)
-   
-    const [loading,setLoading] = useState(false)
-    const navigate = useNavigate()
+    const [admin,setAdmin] = useState(true)
+    const [loading,setLoading] = useState(true)
+    const navigate = useNavigate();
     useEffect(()=>{
-        setLoading(true)
+        
         fetch(`${apiUrl}/admin/check`,{
             headers:{
                 authorization: `bearer ${sessionStorage.getItem("token")}`
@@ -20,22 +19,28 @@ const VerifyAdmin = ({children}) => {
             console.log(data)
             if(data.isAdmin){
                 setAdmin(true)
-                
-            }{
                 setLoading(false)
+                
+            }else{
+                setAdmin(false)
+                setLoading(false)
+                navigate("/", { replace: true })
+                
             }
         })
 
+       
+    },[navigate])
 
-        
-    },[])
+   
  
     if(loading){
-        return ;
+        return null
     }
-    if(!admin ){
-       return  navigate("/")
+    if(!admin){
+        return <Navigate to="/" replace={true}/>
     }
+    
     if(admin){
         return children
     }

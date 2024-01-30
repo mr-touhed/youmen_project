@@ -3,9 +3,11 @@ import { apiUrl } from "../utilities/url";
 
 
 const GetAllUsersHooks = () => {
-    // ignore next line react-hooks/rules-of-hooks 
+   
     const [loading,setLoading] = useState(false)
     const [allUsers,setallUsers] = useState([])
+   
+    const [error,setError] = useState(false)
         useEffect(()=>{
             setLoading(true)
             fetch(`${apiUrl}/allusers`,{
@@ -14,26 +16,23 @@ const GetAllUsersHooks = () => {
                     authorization: `bearer ${sessionStorage.getItem("token")}`
                 }
             })
-            .then(res => {
-                setLoading(false)
-               return res.json()
-                
-                
-            })
+            .then(res => res.json())
             .then(data => {
                 
-                console.log(data)
+                
                 setallUsers(data)
                 setLoading(false)
                 
                 })
                 .catch(err =>{
                     console.log(err)
+                    setLoading(false)
+                    setError(true)
                 })
 
         },[])
-
-            return {loading,allUsers}
+        
+            return {loading,allUsers,error}
 
 };
 

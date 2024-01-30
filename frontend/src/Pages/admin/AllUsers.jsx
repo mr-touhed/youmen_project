@@ -2,7 +2,7 @@
 import {  useEffect, useState } from "react";
 import GetAllUsersHooks from "../../Hooks/GetAllUsersHooks";
 import Swal from 'sweetalert2'
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { FcCancel,FcSupport,FcShare    } from "react-icons/fc";
 import { apiUrl } from "../../utilities/url";
 
@@ -31,14 +31,16 @@ return formattedDate; // Output: 12/14/2023 10:24
 
 
 const AllUsers = () => {
-    const {loading,allUsers =[]} = GetAllUsersHooks()
-    const [showInfo,setShowInfo] = useState([...allUsers] || [])
+
+    const {loading,allUsers =[],error} = GetAllUsersHooks()
+    
+    const [showInfo,setShowInfo] = useState([])
 
 
 
     useEffect(() => {
-        if (!loading) {
-          setShowInfo([...allUsers]);
+        if (!loading && !error) {
+          setShowInfo(allUsers);
         }
       }, [loading, allUsers]);
 
@@ -46,10 +48,10 @@ const AllUsers = () => {
     if(loading){
         return "Loading...."
     }
-
+    
     const handelSearch = (e) =>{
       const inputValue = e.target.value;
-      const filterUser = allUsers.filter(user => user.userPath?.split("/")[0] == inputValue)
+      const filterUser = allUsers.filter(user => user?.user_path.split("/")[0] == inputValue)
       
       if(!inputValue){
         setShowInfo([...allUsers])
@@ -163,7 +165,7 @@ const AllUsers = () => {
                       </thead>
                       <tbody>
                         {
-                            showInfo.map((user,index) =>{
+                          showInfo.map((user,index) =>{
                                 const {user_name,status,_id,createAt,user_path} = user
                                 let catalist;
                                 let name;

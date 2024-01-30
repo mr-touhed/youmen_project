@@ -39,7 +39,7 @@ input::placeholder {
   }
   
   .card_section {
-    @apply bg-[url(./assets/bg.png)] bg-[#000000ea]  bg-top  md:[length:100%_100%]  bg-[length:100%_100%]    bg-no-repeat relative after:content-[""] after:absolute after:bottom-0  after:w-full after:h-[40%] after:bg-gradient-to-t from-[#ffffff]  to-[rgba(255,255,255,0)]
+    @apply bg-[url(./assets/YM_Background.webp)] bg-white  bg-top  bg-cover     bg-no-repeat relative after:content-[""] after:absolute after:bottom-0  after:w-full after:h-[40%] after:bg-gradient-to-t from-[hsla(0,0%,100%,1)]  to-[rgba(255,255,255,0)]
   }
   .profile {
     @apply bg-[url(./assets/footer_bg.png)] bg-[20%_100%] md:bg-[90%_150%] bg-no-repeat bg-contain ;

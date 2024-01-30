@@ -61,21 +61,15 @@ const transporter = nodemailer.createTransport({
 async function sendingEmail(from,to,name,number,partner) {
 
     
-
+    console.log(from,to,name,number,partner)
     
     // send mail with defined transport object
     const info = await transporter.sendMail({
       from: from, // sender address
       to: to, // list of receivers
       subject: `please connect with ${name} `, // Subject line
-      // html: `
-      // <h3 style="font-family:'Fantasy'; font-size:1.5rem">hello! my name is ${name}</h3>
-      //   <p style="font-size:1.5em">You can reach me at ${from} and my mobile Number is ${number}</p>
-        
       
-      
-      // `
-      html: templete(partner,name,to,number)
+      html: templete(partner,name,from,number)
     });
   
     

@@ -1,8 +1,8 @@
 import logo from "../../assets/logo_1.png";
-import { MdOutlineAlternateEmail } from "react-icons/md";
+import { MdEmail, MdOutlineAlternateEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
 import { MdArrowForwardIos } from "react-icons/md";
-import { useEffect, useRef, useState } from "react";
+import { useEffect,  useState } from "react";
 import SmsSender from "../../components/SmsSender";
 import VCardComponent from "./VCardComponent";
 import { PiInstagramLogoDuotone, PiLinkedinLogoFill } from "react-icons/pi";
@@ -10,9 +10,9 @@ import { PiFacebookLogoFill } from "react-icons/pi";
 import { PiLinkSimpleFill } from "react-icons/pi";
 import { MdAddLocationAlt } from "react-icons/md";
 import { HiBuildingOffice2 } from "react-icons/hi2";
+import { IoHome } from "react-icons/io5";
 const Profile = ({ user }) => {
 
-  console.log(user)
   const [sendSms, setSendSms] = useState(false);
   const {
     _id,address,user_name,position,office,email,tel,work_tel,status,social_links,createAt,img
@@ -93,7 +93,7 @@ const Profile = ({ user }) => {
         </div>
       </div>
 
-      <section className="md:max-h-[520px]  max-h-[500px] px-2">
+      <section className="md:max-h-[530px]  max-h-[550px] px-2">
         <div
           className={` grid grid-cols-1 justify-items-center   space-y-4  ${
             sendSms && "hidden transition-all duration-75"
@@ -119,20 +119,26 @@ const Profile = ({ user }) => {
           </div>
 
           <ul className="space-y-6 py-6  md:w-[600px] w-full px-6 md:text-[1.3rem]">
-            <li className="shadow-sm shadow-white  md:grid md:grid-cols-[24px_1fr_24px] flex justify-between gap-2 md:gap-6 items-center ">
-              <MdOutlineAlternateEmail  className="md:w-6 md:h-6 w-4 h-4"/> <span className="break-words ">{email}</span> <MdArrowForwardIos className="md:w-6 md:h-6 w-4 h-4 text-slate-500"/>
+            <li className="shadow-sm shadow-white  md:grid md:grid-cols-[24px_1fr_24px] flex justify-between gap-6 md:gap-6 items-center ">
+              <MdEmail   className="md:w-6 md:h-6 w-4 h-4"/> <span className="break-words mr-auto">{email}</span> <MdArrowForwardIos className="md:w-6 md:h-6 w-4 h-4 text-slate-500"/>
             </li>
           {work_tel && <li className=" shadow-sm  w-full  shadow-white md:grid md:grid-cols-[24px_1fr_24px] flex justify-between gap-6 items-center relative">
             <FaPhone className="md:w-6 md:h-6 w-4 h-4"/>
-            <span className=" break-words">
+            <span className=" break-words mr-auto">
               {work_tel} <span className="md:text-[12px] text-[0.5rem] text-blue-900">(work)</span>
             </span>
             <MdArrowForwardIos className="md:w-6 md:h-6 w-4 h-4 text-slate-500"/>
           </li>}
             <li className=" shadow-sm shadow-white md:grid md:grid-cols-[24px_1fr_24px] flex justify-between gap-6 items-center ">
               <FaPhone className="md:w-6 md:h-6 w-4 h-4"/>
-              <span className="">{tel}</span> <MdArrowForwardIos className="md:w-6 md:h-6 w-4 h-4 text-slate-500"/>
+              <span className="mr-auto">{tel}</span> <MdArrowForwardIos className="md:w-6 md:h-6 w-4 h-4 text-slate-500"/>
             </li>
+            {address && <li className="max-w-full grid grid-cols-[24px_1fr] gap-6 break-words text-sm">
+            
+            <IoHome className="w-4 h-4 md:w-6 md:h-6 min-w-4 min-h-4"/>
+                <p className="break-words text-slate-700">{address} </p>
+            
+            </li>}
             <li  className="shadow-sm  shadow-white flex md:gap-12 gap-6 justify-center items-center ">
               {
                 social_links && social_links.map(l => {
@@ -153,12 +159,7 @@ const Profile = ({ user }) => {
                 })
               }
             </li>
-            {address && <li className="max-w-full flex justify-center  items-center gap-3 break-words text-sm">
-            <div className="flex items-center gap-4 justify-center ">
-            <MdAddLocationAlt className="w-4 h-6 "/>
-                <p className="break-words">{address} </p>
-            </div>
-            </li>}
+            
           </ul>
 
           

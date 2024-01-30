@@ -64,7 +64,7 @@ const [emailInfo,setEmailInfo] = useState({name:"",email:"",phone:""})
     }
     const PartnerNickName = partnerName?.split(" ")[0].toUpperCase() || "---"
     return (
-        <section className={`md:max-h-[520px]  max-h-[500px] ${active ?"active-sms" :"sms-section "}`}>
+        <section className={`md:max-h-[530px] min-h-[550px] max-h-[550px] ${active ?"active-sms" :"sms-section "}`}>
                     
                     <div className="grid grid-cols-1 space-y-3 max-w-xl mx-auto pb-8 px-6">
                     <div className="flex justify-between items-center my-6">
