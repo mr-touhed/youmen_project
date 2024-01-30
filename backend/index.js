@@ -30,6 +30,8 @@ app.use("/api",userRouters)
 
 
 
-
+app.get("/", (req,res)=>{
+    res.send("server is running now....")
+})
 
 app.listen(port, ()=> console.log(`your server is running at http://localhost:${port}/`))
