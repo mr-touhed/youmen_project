@@ -133,10 +133,10 @@ const Profile = ({ user }) => {
               <FaPhone className="md:w-6 md:h-6 w-4 h-4"/>
               <span className="mr-auto">{tel}</span> <MdArrowForwardIos className="md:w-6 md:h-6 w-4 h-4 text-slate-500"/>
             </li>
-            {address && <li className="max-w-full grid grid-cols-[24px_1fr] gap-6 break-words text-sm">
+            {address && <li className="max-w-full grid grid-cols-[24px_1fr] items-center gap-6 break-words text-sm">
             
             <IoHome className="w-4 h-4 md:w-6 md:h-6 min-w-4 min-h-4"/>
-                <p className="break-words text-slate-700">{address} </p>
+                <span className="break-words md:text-[1.3rem]">{address} </span>
             
             </li>}
             <li  className="shadow-sm  shadow-white flex md:gap-12 gap-6 justify-center items-center ">
